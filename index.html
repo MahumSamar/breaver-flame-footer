@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Breaver Studios — Flame Footer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ee6a35;
+        --ink: #141210;
+        --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+        --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --gutter: clamp(16px, 2.1vw, 42px);
+      }
+      
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      
+      body {
+        margin: 0;
+        background: var(--ink);
+        color: var(--ink);
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+      }
+      
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      
+      /* ---------- Footer shell ---------- */
+      
+      .footer {
+        /* Sizing unit: follows the width, but backs off on short viewports so
+           the content always sits below the flames. */
+        --u: min(1vw, 1.78vh);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100vh;
+        height: 100svh;
+        background: var(--ink);
+        overflow: hidden;
+        isolation: isolate;
+      }
+      
+      .footer__content,
+      .footer__wordmark {
+        position: relative;
+        z-index: 1;
+        flex: none;
+      }
+      
+      /* ---------- Animated background video ---------- */
+      
+      /* The video is the whole background of the footer: nothing is painted
+         over it, the content simply sits on its orange area. */
+      .footer__stage {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        container-type: size;
+      }
+      
+      /* Slightly oversized so the blend layers never show a soft edge. White
+         here becomes the brand orange once the blend layers are applied, so the
+         area below the video continues its orange seamlessly. */
+      .footer__blend {
+        position: absolute;
+        inset: -2px;
+        isolation: isolate;
+        background: #fff;
+      }
+      
+      /* Anchored to the TOP so the flame tips and exclamation mark are never
+         cut off (only the empty strip above them is trimmed). Always at least
+         as wide as the footer; on tall/narrow screens it is enlarged so the
+         character stays a good size and is cropped at the sides instead. */
+      .footer__video {
+        --video-h: clamp(56.25cqw, 62cqh, 134cqw);
+        position: absolute;
+        top: calc(var(--video-h) * -0.07 + 2px);
+        left: 50%;
+        height: var(--video-h);
+        aspect-ratio: 16 / 9;
+        max-width: none;
+        transform: translateX(-50%);
+        display: block;
+        pointer-events: none;
+        /* Reduce the footage to pure black / white so the two layers below
+           can repaint it in the exact brand colours. */
+        filter: grayscale(1) brightness(1.5) contrast(5);
+      }
+      
+      .footer__blend::before,
+      .footer__blend::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      
+      /* white -> orange */
+      .footer__blend::before {
+        background: var(--orange);
+        mix-blend-mode: multiply;
+      }
+      
+      /* black -> ink */
+      .footer__blend::after {
+        background: var(--ink);
+        mix-blend-mode: lighten;
+      }
+      
+      /* ---------- Content ---------- */
+      
+      .footer__content {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: start;
+        gap: 32px;
+        padding: clamp(14px, calc(var(--u) * 3), 60px) var(--gutter) clamp(14px, calc(var(--u) * 2.8), 56px);
+      }
+      
+      .footer__heading {
+        margin: 0;
+        font-family: var(--font-display);
+        font-variation-settings: "wdth" 100;
+        font-weight: 700;
+        font-size: clamp(20px, calc(var(--u) * 1.7), 34px);
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+      
+      /* Navigation */
+      
+      .footer__nav ul {
+        list-style: none;
+        margin: clamp(8px, calc(var(--u) * 0.9), 18px) 0 0;
+        padding: 0;
+        display: grid;
+        gap: clamp(6px, calc(var(--u) * 1.25), 25px);
+      }
+      
+      .footer__nav a {
+        font-size: clamp(16px, calc(var(--u) * 1.4), 28px);
+        line-height: 1.1;
+        position: relative;
+        display: inline-block;
+      }
+      
+      .footer__nav a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -3px;
+        height: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.25s ease;
+      }
+      
+      .footer__nav a:hover::after,
+      .footer__nav a:focus-visible::after {
+        transform: scaleX(1);
+      }
+      
+      /* Say Hi */
+      
+      .footer__cta {
+        text-align: center;
+      }
+      
+      .footer__cta p {
+        margin: clamp(12px, calc(var(--u) * 1.4), 28px) 0 0;
+        font-size: clamp(16px, calc(var(--u) * 1.4), 28px);
+        line-height: 1.2;
+      }
+      
+      .footer__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: clamp(14px, calc(var(--u) * 1.4), 28px);
+        padding: clamp(12px, calc(var(--u) * 1.15), 23px) clamp(26px, calc(var(--u) * 2.2), 44px);
+        border-radius: 999px;
+        background: var(--ink);
+        color: var(--orange);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(16px, calc(var(--u) * 1.3), 26px);
+        line-height: 1.2;
+        transition: transform 0.2s ease;
+      }
+      
+      .footer__button:hover,
+      .footer__button:focus-visible {
+        transform: scale(1.05) rotate(-2deg);
+      }
+      
+      /* Socials + legal */
+      
+      .footer__meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: clamp(12px, calc(var(--u) * 1.25), 25px);
+      }
+      
+      .footer__socials {
+        display: flex;
+        gap: clamp(10px, calc(var(--u) * 1), 20px);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .footer__socials a {
+        display: grid;
+        place-items: center;
+        width: clamp(36px, calc(var(--u) * 2.45), 49px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--ink);
+        color: var(--orange);
+        transition: transform 0.2s ease;
+      }
+      
+      .footer__socials a:hover,
+      .footer__socials a:focus-visible {
+        transform: translateY(-3px);
+      }
+      
+      .footer__socials svg {
+        width: 52%;
+        height: 52%;
+        display: block;
+      }
+      
+      .footer__copyright {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(16px, calc(var(--u) * 1.45), 29px);
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+      
+      .footer__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.42em 0.75em;
+        border: 2px solid var(--ink);
+        border-radius: 0.55em;
+        font-size: clamp(13px, calc(var(--u) * 1.05), 21px);
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+      
+      .footer__badge svg {
+        width: 1em;
+        height: 1em;
+        flex: none;
+      }
+      
+      /* ---------- Wordmark ---------- */
+      
+      .footer__wordmark {
+        margin: 0;
+        padding: 0 var(--gutter) clamp(10px, 1.2vw, 24px);
+        font-family: var(--font-display);
+        font-variation-settings: "wdth" 100, "opsz" 96;
+        font-weight: 800;
+        font-size: 11.5vw; /* refined by the script below so it spans the full width */
+        line-height: 0.8;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        -webkit-text-stroke: 0.06em var(--ink);
+        paint-order: stroke fill;
+        stroke-linejoin: round;
+        user-select: none;
+      }
+      
+      .footer__wordmark span {
+        display: inline-block;
+        transform-origin: left bottom;
+      }
+      
+      a:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 4px;
+      }
+      
+      /* ---------- Tablet ---------- */
+      
+      @media (max-width: 900px) {
+        .footer__content {
+          grid-template-columns: 1fr 1fr;
+          row-gap: 28px;
+        }
+      
+        .footer__cta {
+          grid-column: 1 / -1;
+          grid-row: 1;
+        }
+      }
+      
+      /* ---------- Mobile ---------- */
+      
+      @media (max-width: 560px) {
+        .footer__content {
+          grid-template-columns: 1fr;
+          row-gap: clamp(14px, 3svh, 30px);
+          padding-top: clamp(12px, 2.5svh, 24px);
+          padding-bottom: clamp(14px, 3svh, 30px);
+        }
+      
+        .footer__cta {
+          grid-column: auto;
+        }
+      
+        .footer__nav {
+          text-align: center;
+        }
+      
+        .footer__nav ul {
+          justify-items: center;
+          gap: clamp(6px, 1.4svh, 12px);
+        }
+      
+        .footer__meta {
+          align-items: center;
+        }
+      
+        .footer__socials a {
+          width: 44px;
+        }
+      }
+      
+      /* ---------- Short phones: lay the links out in a row ---------- */
+      
+      @media (max-width: 560px) and (max-height: 740px) {
+        .footer__nav ul {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 6px 16px;
+        }
+      
+        .footer__socials a {
+          width: 38px;
+        }
+      }
+      
+      @media (prefers-reduced-motion: reduce) {
+        .footer__button,
+        .footer__socials a,
+        .footer__nav a::after {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <footer class="footer">
+      <div class="footer__stage" aria-hidden="true">
+        <div class="footer__blend">
+          <video
+            class="footer__video"
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_070315_4e905ae4-75ee-4635-94db-8fc7cce05bd7.mp4"
+            poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_070051_a6b54ba5-8249-4a2e-8036-d676e9127a5c.png"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+          ></video>
+        </div>
+      </div>
+
+      <div class="footer__content">
+        <nav class="footer__nav" aria-label="Footer">
+          <h2 class="footer__heading">Navigation</h2>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#freebies">Freebies</a></li>
+            <li><a href="#privacy">Privacy Policy</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__cta">
+          <h2 class="footer__heading">Say Hi!</h2>
+          <p>Interested in working with us?</p>
+          <a class="footer__button" href="#contact">Lets Chat!</a>
+        </div>
+
+        <div class="footer__meta">
+          <ul class="footer__socials">
+            <li>
+              <a href="#linkedin" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="2.5" y="8.6" width="4.3" height="12.9" rx="0.4" />
+                  <circle cx="4.65" cy="4.4" r="2.5" />
+                  <path d="M9.6 8.6h4.1v1.9c.8-1.4 2.2-2.2 4-2.2 3 0 4.3 1.9 4.3 5.2v8h-4.3v-7.1c0-1.6-.6-2.5-1.9-2.5-1.4 0-2.1 1-2.1 2.6v7H9.6z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#instagram" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                  <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" />
+                  <circle cx="12" cy="12" r="4.4" />
+                  <circle cx="17.4" cy="6.6" r="1.3" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#tiktok" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#threads" aria-label="Threads">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M19.2 7.6C18 4.4 15.6 2.8 12.2 2.8c-5 0-7.6 3.5-7.6 9.2s2.6 9.2 7.6 9.2c3.9 0 6.6-2 6.600-5 0-2.900-2.400-4.500-6.300-4.500-2.500 0-4 1.100-4 2.900 0 1.600 1.300 2.700 3.200 2.700 2.600 0 4-1.800 4-4.800 0-2.700-1.300-4.200-3.600-4.200-1.300 0-2.300.5-3 1.500" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+
+          <p class="footer__copyright">© 2026 Breaver Studios</p>
+
+          <a class="footer__badge" href="https://webstudio.is" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M1.5 5h4.300l2.200 8.200L10.300 5h3.400l2.300 8.200L18.200 5h4.300l-4.300 14h-4.100L12 11.600 9.900 19H5.800z" />
+            </svg>
+            Built with love in Webstudio
+          </a>
+        </div>
+      </div>
+
+      <p class="footer__wordmark" aria-label="Breaver Studios"><span>Breaver Studios</span></p>
+    </footer>
+
+    <script>
+      (function () {
+        var footer = document.querySelector(".footer");
+        var content = document.querySelector(".footer__content");
+        var wordmark = document.querySelector(".footer__wordmark");
+        var inner = wordmark && wordmark.querySelector("span");
+        var video = document.querySelector(".footer__video");
+        if (!footer || !content || !wordmark || !inner || !video) return;
+      
+        // Where the character's hands end, as a fraction of the video height,
+        // measured from the top of the footer (the video is shifted up by 7%).
+        var HANDS = 0.56;
+      
+        // Stretch the wordmark so it spans the footer edge to edge, capped so it
+        // never takes more than a fair share of the viewport height.
+        function fitWordmark(scale) {
+          var style = getComputedStyle(wordmark);
+          var available =
+            wordmark.clientWidth -
+            parseFloat(style.paddingLeft) -
+            parseFloat(style.paddingRight);
+          wordmark.style.fontSize = "100px";
+          var natural = inner.getBoundingClientRect().width;
+          if (natural > 0) {
+            var size = Math.min(
+              (100 * available) / natural,
+              window.innerHeight * 0.22 * scale
+            );
+            wordmark.style.fontSize = size + "px";
+          }
+        }
+      
+        // Size the background video so the character sits just above the content,
+        // and shrink the content a little on short viewports if it would overlap.
+        function layout() {
+          var width = footer.clientWidth;
+          var minH = width * 0.5625; // must always cover the full width
+          var maxH = width * 1.34; // keep the character inside narrow screens
+          var scale = 1;
+          var space;
+      
+          for (var i = 0; i < 8; i++) {
+            footer.style.setProperty(
+              "--u",
+              "calc(min(1vw, 1.78vh) * " + scale.toFixed(3) + ")"
+            );
+            fitWordmark(scale);
+            space =
+              content.getBoundingClientRect().top -
+              footer.getBoundingClientRect().top;
+            if (minH * HANDS <= space || scale <= 0.62) break;
+            scale *= 0.92;
+          }
+      
+          var videoH = Math.max(minH, Math.min(space / HANDS, maxH));
+          video.style.setProperty("--video-h", videoH + "px");
+        }
+      
+        layout();
+        window.addEventListener("resize", layout);
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(layout);
+        }
+      
+        // Respect reduced-motion: show the still frame instead of the loop.
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          video.removeAttribute("autoplay");
+          video.pause();
+        }
+      })();
+    </script>
+  </body>
+</html>
